@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html style="background-color: #33475b">
+<head>
+<style>
+h1 {text-align:center;}
+h2 {text-align:center;}
+h1 {background-image: linear-gradient(to bottom right, #33475b, #0033CC, #FF77CC, rgb(255, 122, 89));}
+h2 {color:white}
+h3 {color:white}
+h1 {color:white}
+label {color:white;}
+input { text-align:center;}
+</style>
+</head>
+<body>
+<h1>VVK Vocabulary Builder</h1>
+<h2>Click on to see the realted information for the word</h2>
+<form action="/Synonyms" method="POST">
+    <label for="Word">Word:</label><br>
+    <input type="text" id="word" name="word">
+    <input type="submit" value="Synonyms"/>
+</form>
+<form action="/Antonyms" method="POST">
+    <label for="Word">Word:</label><br>
+    <input type="text" id="word" name="word">
+    <input type="submit" value="Antonyms"/>
+</form>
+<form action="/Sentence" method="POST">
+    <label for="Word">Word:</label><br>
+    <input type="text" id="word" name="word">
+    <input type="submit" value="Sentence"/>
+</form>
+<form action="/Definition" method="POST">
+    <label for="Word">Word:</label><br>
+    <input type="text" id="word" name="word">
+    <input type="submit" value="Definition"/>
+</form>
+
+</body>
+</html>
