@@ -2,6 +2,7 @@ from flask import Flask,render_template,url_for,redirect,request
 import json
 import requests
 import sqlite3
+import os
 app = Flask(__name__)
 
 @app.route("/hell")
@@ -125,8 +126,8 @@ def get_dictionary_response(word):
     example = "sorry, no examples are available."
     synonyms = ["sorry, no synonyms are available."]
     antonyms = ["sorry, no antonyms are available."]
-    # api_key = os.getenv("KEY_THESAURUS")
-    url = f"https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{word}?key=b3b73004-8412-455e-a40a-2cfb3d87e9ee"
+    api_key = os.getenv("KEY")
+    url = f"https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{word}?key={api_key}"
     response = requests.get(url)
     api_response = json.loads(response.text)
     if response.status_code == 200:
