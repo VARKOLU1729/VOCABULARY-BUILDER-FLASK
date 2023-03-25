@@ -1,11 +1,59 @@
 from flask import Flask,render_template,url_for,redirect,request
 import json
 import requests
+import sqlite3
 app = Flask(__name__)
 
 @app.route("/hell")
 def hell():
     return render_template('index.html')
+
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/user')
+def user():
+    return render_template('user_details.html')
+
+@app.route('/history')
+def history():
+    data = ''
+    conn = sqlite3.connect('web.db')
+    c = conn.cursor()
+    for row in c.execute("SELECT * FROM words"):
+        data += str(row)
+    return render_template('history.html', word = str(data))
+
+
+
+@app.route("/Login", methods = ['POST', 'GET']) 
+def Login():
+    username = ''
+    password = ''
+    email = ''
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        conn = sqlite3.connect('userlogin.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO users (username,password,email) VALUES (?,?,?)", (username,password,email))
+        c.execute("SELECT username FROM users ")
+        result = c.fetchall()
+    return render_template('user_index.html', word = str(result[len(result)-1]))
 
 
 @app.route("/well/<name>")   
@@ -24,8 +72,12 @@ def Synonyms():
     word = ''
     if request.method == 'POST':
         word = request.form['word']
+        conn = sqlite3.connect('web.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO words VALUES (?)", (word,))
+        conn.commit()
         r = get_dictionary_response(word)
-    return redirect(url_for('well',name = 'Synonyms of '+ word + " : " +r["synonyms"][0]))
+    return redirect(url_for('well',name = 'Synonyms of '+ word + " : " +str(r["synonyms"])))
 
 
 @app.route("/Antonyms", methods = ['POST', 'GET'])
@@ -33,8 +85,12 @@ def Antonyms():
     word = ''
     if request.method == 'POST':
         word = request.form['word']
+        conn = sqlite3.connect('web.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO words VALUES (?)", (word,))
+        conn.commit()
         r = get_dictionary_response(word)
-    return redirect(url_for('well',name = 'Antonyms of '+ word + " : " +r["antonyms"][0]))
+    return redirect(url_for('well',name = 'Antonyms of '+ word + " : " +str(r["antonyms"])))
 
 
 @app.route("/Definition", methods = ['POST', 'GET'])
@@ -42,6 +98,10 @@ def Definition():
     word = ''
     if request.method == 'POST':
         word = request.form['word']
+        conn = sqlite3.connect('web.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO words VALUES (?)", (word,))
+        conn.commit()
         r = get_dictionary_response(word)
     return redirect(url_for('well',name = 'Definition of '+ word + " : " +r["meaning"]))
 
@@ -52,6 +112,10 @@ def Sentence():
     r = 0
     if request.method == 'POST':
         word = request.form['word']
+        conn = sqlite3.connect('web.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO words VALUES (?)", (word,))
+        conn.commit()
         r = get_dictionary_response(word)
     return redirect(url_for('well',name = 'Example of '+ word + " : " +r["examples"]))
 
@@ -94,3 +158,5 @@ def get_dictionary_response(word):
 
 if __name__ == "__main__":
     app.run(port = '4000', debug = True)
+
+
